@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://Admin:20081999@devconnector.p10qs.mongodb.net/<dbname>?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://Admin:20081999@devconnector.p10qs.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtSecret": "expilyarmus"
 }
