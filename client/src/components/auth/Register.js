@@ -1,7 +1,10 @@
 import React, { Fragment, useState } from 'react'
-import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { setAlert } from '../../actions/alert'
+import PropTypes from 'prop-types'
 
-const Register = () => {
+const Register = ({ setAlert }) => {
   const [FormData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,28 +22,28 @@ const Register = () => {
   const onSubmit = async e => {
     e.preventDefault();
 
-    if(password!==password2) {
-      console.log("Passwords do not match")
+    if (password !== password2) {
+      setAlert('Passwords do not match', 'danger', 3000)
     } else {
-/*       const newUser = {
-        name,
-        email,
-        password
-      }
-
-      try {
-        const config = {
-          headers: {
-            'Content-Type' : 'application/json'
-          }
-        }
-
-        const body = JSON.stringify(newUser);
-        const res = await axios.post('/api/users', body, config);
-        console.log(res.data)
-      } catch (error) {
-        console.log(error.response.data);
-      } */
+      /*       const newUser = {
+              name,
+              email,
+              password
+            }
+      
+            try {
+              const config = {
+                headers: {
+                  'Content-Type' : 'application/json'
+                }
+              }
+      
+              const body = JSON.stringify(newUser);
+              const res = await axios.post('/api/users', body, config);
+              console.log(res.data)
+            } catch (error) {
+              console.log(error.response.data);
+            } */
     }
   }
 
@@ -53,7 +56,7 @@ const Register = () => {
         <i className="fas fa-user"></i>
         Create Your Account
       </p>
-      <form onSubmit = {onSubmit} className="form">
+      <form onSubmit={onSubmit} className="form">
         <div className="form-group">
           <input type="text"
             name={"name"} placeholder="Name" value={name}
@@ -86,4 +89,8 @@ const Register = () => {
   )
 }
 
-export default Register
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired
+}
+
+export default connect(null, { setAlert })(Register)
