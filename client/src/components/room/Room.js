@@ -18,7 +18,7 @@ const StyledVideo = styled.video`
 `;
 
 const Video = (props) => {
-  /* const ref = useRef();
+  const ref = useRef();
 
   useEffect(() => {
     props.peer.on("stream", stream => {
@@ -29,12 +29,7 @@ const Video = (props) => {
 
   return (
     <StyledVideo playsInline autoPlay ref={ref} />
-  ); */
-  return (
-    <h1>
-      {`new peer is connected ${props.peer}`}
-    </h1>
-  )
+  );
 }
 
 
@@ -100,6 +95,28 @@ const Room = (props) => {
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
       initiator: true,
+      config: {
+        iceServers: [
+          {
+            urls: "stun:openrelay.metered.ca:80",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+        ],
+      },
       trickle: false,
       stream
     })
@@ -120,6 +137,28 @@ const Room = (props) => {
   function addPeer(incomingSignal, callerID, stream) {
     const peer = new Peer({
       initiator: false,
+      config: { 
+        iceServers: [
+          {
+            urls: "stun:openrelay.metered.ca:80",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+        ],
+      },
       trickle: false,
       stream
     })
