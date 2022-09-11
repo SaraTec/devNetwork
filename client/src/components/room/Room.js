@@ -47,8 +47,10 @@ const Room = (props) => {
 
   useEffect(() => {
     socketRef.current = io.connect("/");
+    let videoStream;
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
       userVideo.current.srcObject = stream;
+      videoStream = stream;
       socketRef.current.emit("join room", roomID);
       //#1
       socketRef.current.on("all users", users => {
@@ -62,7 +64,10 @@ const Room = (props) => {
             peer
           })
 
-          peers.push(peer);
+          peers.push({
+            peerID: userID,
+            peer
+          });
         })
 
         setPeers(peers);
@@ -77,7 +82,10 @@ const Room = (props) => {
           peer
         })
 
-        setPeers(users => [...users, peer]);
+        setPeers(users => [...users, {
+          peerID: payload.callerID,
+          peer
+        }]);
       })
     })
 
@@ -89,8 +97,35 @@ const Room = (props) => {
       console.log("ID Peer що прийняв наш запит = ", payload.id)
       item.peer.signal(payload.signal);
     })
+
+    socketRef.current.on("remove user", payload => {
+      console.log("remove user = ", payload)
+
+      setPeers(users => {
+        console.log("users = ", users)
+        return users.filter(user => {
+          if (user.peerID === payload.id) {
+            user.peer.destroy();
+            return false
+          }
+
+          return true;
+        })
+      });
+    })
+
+    return () => {
+      //console.log("socketRef.current = ", socketRef.current)
+      socketRef.current.stop();
+      stopVideo(videoStream)
+    };
   }, []);
 
+  function stopVideo(stream) {
+    stream.getTracks().forEach(function(track) {
+      track.stop();
+    });
+  }
   //#2
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -137,7 +172,7 @@ const Room = (props) => {
   function addPeer(incomingSignal, callerID, stream) {
     const peer = new Peer({
       initiator: false,
-      config: { 
+      config: {
         iceServers: [
           {
             urls: "stun:openrelay.metered.ca:80",
@@ -183,7 +218,7 @@ const Room = (props) => {
   return (
     <Container>
       <StyledVideo muted ref={userVideo} autoPlay playsInline />
-      {peers.map((peer, index) => {
+      {peers.map(({ peer }, index) => {
         return (
           <Video key={index} peer={peer} />
         );

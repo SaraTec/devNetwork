@@ -63,8 +63,13 @@ io.on('connection', socket => {
   socket.on('disconnect', () => {
     const roomID = socketToRoom[socket.id];
     let room = users[roomID];
+    console.log("user left = ", socket.id)
     if (room) {
       room = room.filter(id => id !== socket.id);
+      console.log("room = ", room)
+      room.forEach(userId => {
+        io.to(userId).emit('remove user', {id: socket.id})
+      })
       users[roomID] = room;
     }
   });
