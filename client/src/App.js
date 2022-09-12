@@ -20,7 +20,7 @@ import { Provider } from 'react-redux'
 import store from './store'
 import { loadUser } from './actions/auth'
 
-import './App.css';
+import './scss/style.scss';
 import Rooms from './components/rooms/Rooms';
 import Room from './components/room/Room';
 
@@ -45,10 +45,10 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/rooms" component={Rooms} />
-              <Route exact path="/room/:id" component={Room} />
               <Route exact path="/profiles" component={Profiles} />
               <Route exact path="/profile/:id" component={Profile} />
+              <PrivateRoute exact path="/rooms" component={Rooms} />
+              <PrivateRoute exact path="/room/:id" component={Room} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/create-profile" component={CreateProfile} />
               <PrivateRoute exact path="/edit-profile" component={EditProfile} />

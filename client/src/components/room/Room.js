@@ -115,8 +115,7 @@ const Room = (props) => {
     })
 
     return () => {
-      //console.log("socketRef.current = ", socketRef.current)
-      socketRef.current.stop();
+      socketRef.current.disconnect();
       stopVideo(videoStream)
     };
   }, []);

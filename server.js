@@ -21,8 +21,10 @@ app.use('/api/users', require('./routes/api/user'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/post', require('./routes/api/post'));
+app.use('/api/room', require('./routes/api/room'));
 
-const users = {};
+const Room = require('./Models/Room')
+//const users = {};
 
 /* users = {
   ["roomID"]: [
@@ -33,20 +35,22 @@ const users = {};
 const socketToRoom = {};
 
 io.on('connection', socket => {
-  socket.on("join room", roomID => {
-    if (users[roomID]) {
-      const length = users[roomID].length;
+  socket.on("join room", async roomID => {
+    const room = await Room.findById(roomID)
+    console.log("users = ", room)
+    if (room) {
+      const length = room.users.length;
       if (length === 4) {
         socket.emit("room full");
         return;
       }
-      users[roomID].push(socket.id);
+      room.users.push(socket.id);
     } else {
-      users[roomID] = [socket.id];
+      room.users = [socket.id];
     }
     socketToRoom[socket.id] = roomID;
-    const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-
+    const usersInThisRoom = room.users.filter(id => id !== socket.id);
+    room.save();
     socket.emit("all users", usersInThisRoom);
   });
 
@@ -60,17 +64,19 @@ io.on('connection', socket => {
     io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', async () => {
     const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
+    const room = await Room.findById(roomID)
+    let users = room.users;
     console.log("user left = ", socket.id)
-    if (room) {
-      room = room.filter(id => id !== socket.id);
-      console.log("room = ", room)
-      room.forEach(userId => {
+    if (users) {
+      users = users.filter(id => id !== socket.id);
+      console.log("notify users = ", users)
+      users.forEach(userId => {
         io.to(userId).emit('remove user', {id: socket.id})
       })
-      users[roomID] = room;
+      room.users = users;
+      room.save();
     }
   });
 });

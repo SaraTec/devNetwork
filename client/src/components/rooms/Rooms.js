@@ -2,27 +2,44 @@ import React, { Fragment, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Spinner from '../layout/Spinner'
 import { connect } from 'react-redux'
-import { getProfiles } from '../../actions/profile'
+import { getRooms } from '../../actions/room'
 import RoomItem from './RoomItem'
+import axios from 'axios';
 
-const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
+const Rooms = ({ getRooms, room: { rooms, loading } }) => {
   useEffect(() => {
-    getProfiles();
-  }, [getProfiles])
+    getRooms();
+  }, [getRooms])
+
+  const createRoom = async () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    console.log("post ")
+    const res = await axios.post('/api/room', null, config);
+
+    getRooms();
+  }
 
   return <Fragment>
     {loading ? <Spinner /> : <Fragment>
       <h1 className="large text-primary">
-        Developers
+        Rooms
         </h1>
       <p className="lead">
         <i className="fab fa-connectdevelop"></i>
-        {" "}Browse and connect with developers
-        </p>
-      <div className="profiles">
-        {profiles.length > 0 ? (
-          profiles.map(profile => (
-            <RoomItem key={profile._id} profile={profile} />
+        {" "}Select room to connect
+      </p>
+      <button className='btn btn-primary my-1' onClick={createRoom}>
+        Create Room
+      </button>
+      <div className="rooms">
+        {rooms.length > 0 ? (
+          rooms.map(room => (
+            <RoomItem key={room._id} room={room} />
           ))
         ) : <h4>No Profies found...</h4>}
       </div>
@@ -31,13 +48,13 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
 
 }
 
-Profiles.propTypes = {
-  getProfiles: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+Rooms.propTypes = {
+  getRooms: PropTypes.func.isRequired,
+  room: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  room: state.room
 })
 
-export default connect(mapStateToProps, { getProfiles })(Profiles)
+export default connect(mapStateToProps, { getRooms })(Rooms)
