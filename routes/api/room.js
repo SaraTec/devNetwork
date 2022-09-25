@@ -4,8 +4,8 @@ const { check, validationResult } = require('express-validator')
 const auth = require('../../middleware/auth')
 const Room = require('../../Models/Room')
 
-// @route   POST api/post
-// @desc    Create a post
+// @route   POST api/room
+// @desc    Create a room
 // @access  Private
 router.post('/', [auth], async (req, res) => {
   const errors = validationResult(req);

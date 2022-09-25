@@ -12,7 +12,7 @@ connectDB();
 //Init Middleware
 app.use(express.json({ extended: false }))
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 //app.get('/', (req, res) => res.send('API Running'))
 
@@ -68,10 +68,9 @@ io.on('connection', socket => {
     const roomID = socketToRoom[socket.id];
     const room = await Room.findById(roomID)
     let users = room.users;
-    console.log("user left = ", socket.id)
+
     if (users) {
       users = users.filter(id => id !== socket.id);
-      console.log("notify users = ", users)
       users.forEach(userId => {
         io.to(userId).emit('remove user', {id: socket.id})
       })

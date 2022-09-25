@@ -36,11 +36,33 @@ export const deleteRoom = id => async dispatch => {
 
     dispatch(getRooms())
 
-    dispatch(setAlert('Education Removed', 'success'))
+    dispatch(setAlert('Room Removed', 'success'))
   } catch (err) {
     dispatch({
       type: ROOMS_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+}
+
+
+export const filterRooms = (payload) => async dispatch => {
+  dispatch({
+    type: CLEAR_ROOMS
+  })
+  try {
+    //маємо передавати в пейлоуді дані для фільтрування
+    const res = await axios.get('/api/room');
+
+    //console.log("Відфільтровані кімнати = ", res.data)
+    dispatch({
+      type: GET_ROOMS,
+      payload: res.data
+    })
+  } catch (error) {
+    dispatch({
+      type: ROOMS_ERROR,
+      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 }

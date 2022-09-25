@@ -13,14 +13,15 @@ const RoomItem = ({
   const handleDeleteRoom = () => {
     deleteRoom(roomID)
   }
-  
+
   return (
     <div className="profile bg-light">
       <Link to={`/room/${roomID}`} className='btn btn-light'>
         Go to Room
       </Link>
       {
-        auth && auth.user && auth.user.userID === adminUser &&
+        auth && auth.user && auth.user._id
+        === adminUser &&
         <button
           className="btn btn-danger"
           id={roomID}

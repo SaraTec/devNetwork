@@ -18,8 +18,7 @@ const Rooms = ({ getRooms, room: { rooms, loading } }) => {
       }
     }
 
-    console.log("post ")
-    const res = await axios.post('/api/room', null, config);
+    await axios.post('/api/room', {}, config);
 
     getRooms();
   }
