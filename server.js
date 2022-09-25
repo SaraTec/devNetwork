@@ -24,13 +24,6 @@ app.use('/api/post', require('./routes/api/post'));
 app.use('/api/room', require('./routes/api/room'));
 
 const Room = require('./Models/Room')
-//const users = {};
-
-/* users = {
-  ["roomID"]: [
-    ["userSocketID"]
-  ]
-} */
 
 const socketToRoom = {};
 

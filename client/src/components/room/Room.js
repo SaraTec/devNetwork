@@ -1,23 +1,16 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import io from "socket.io-client";
 import Peer from "simple-peer";
-import styled from "styled-components";
+import { withRouter } from 'react-router-dom'
 
-const Container = styled.div`
-    padding: 20px;
-    display: flex;
-    height: 100vh;
-    width: 90%;
-    margin: auto;
-    flex-wrap: wrap;
-`;
-
-const StyledVideo = styled.video`
-    height: 40%;
-    width: 50%;
-`;
-
-const Video = (props) => {
+const VideoWrapper = React.forwardRef((props, ref) => {
+  return (
+    <div className='video-wrapper'>
+      <video {...props} ref={ref}/>
+    </div>
+  )
+})
+const UserVideo = (props) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -28,11 +21,11 @@ const Video = (props) => {
   }, []);
 
   return (
-    <StyledVideo playsInline autoPlay ref={ref} />
+    <VideoWrapper playsInline autoPlay ref={ref} />
   );
 }
 
-
+console.log("window.innerHeight = ", window.innerHeight / 2)
 const videoConstraints = {
   height: window.innerHeight / 2,
   width: window.innerWidth / 2
@@ -48,7 +41,7 @@ const Room = (props) => {
   useEffect(() => {
     socketRef.current = io.connect("/");
     let videoStream;
-    navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
+    navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then(stream => {
       userVideo.current.srcObject = stream;
       videoStream = stream;
       socketRef.current.emit("join room", roomID);
@@ -125,6 +118,12 @@ const Room = (props) => {
       track.stop();
     });
   }
+
+  function onExit() {
+    console.log("onExit")
+    props.history.push('/rooms');
+  }
+
   //#2
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -215,18 +214,25 @@ const Room = (props) => {
   }
 
   return (
-    <Container>
-      <StyledVideo muted ref={userVideo} autoPlay playsInline />
-      {peers.map(({ peer }, index) => {
-        return (
-          <Video key={index} peer={peer} />
-        );
-      })}
-    </Container>
+    <div className='conference-container'>
+      <div className='videos-wrapper'>
+        <VideoWrapper muted ref={userVideo} autoPlay playsInline />
+        {peers.map(({ peer }, index) => {
+          return (
+            <UserVideo key={index} peer={peer} />
+          );
+        })}
+      </div>
+      <div className='actions-wrapper'>
+        <button className='btn btn-danger' onClick={onExit}>
+          Leave
+        </button>
+      </div>
+    </div>
   );
 }
 
 Room.propTypes = {
 }
 
-export default Room
+export default withRouter(Room)
