@@ -40,7 +40,7 @@ const Rooms = ({ getRooms, room: { rooms, loading } }) => {
           rooms.map(room => (
             <RoomItem key={room._id} room={room} />
           ))
-        ) : <h4>No Profies found...</h4>}
+        ) : <h4>No Rooms found...</h4>}
       </div>
     </Fragment>}
   </Fragment>

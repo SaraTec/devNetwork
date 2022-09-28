@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { deleteRoom } from '../../actions/room'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 
 const RoomItem = ({
   deleteRoom,
@@ -15,7 +14,7 @@ const RoomItem = ({
   }
 
   return (
-    <div className="profile bg-light">
+    <div className="room-item bg-light">
       <Link to={`/room/${roomID}`} className='btn btn-light'>
         Go to Room
       </Link>
@@ -27,10 +26,10 @@ const RoomItem = ({
           id={roomID}
           onClick={handleDeleteRoom}
         >
-          Delete
-        </button>
+        <i class="fa fa-trash-o"></i> Delete
+    </button>
       }
-    </div>
+    </div >
   )
 }
 

@@ -15,6 +15,7 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 export const GET_REPOS = 'GET_REPOS';
 export const GET_ROOMS = 'GET_ROOMS';
+export const GET_SPECIFIC_ROOM = 'GET_SPECIFIC_ROOM';
 export const ROOMS_ERROR = 'ROOMS_ERROR';
 export const CLEAR_ROOMS = 'CLEAR_ROOMS';
 

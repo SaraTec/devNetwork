@@ -1,11 +1,13 @@
 import {
   GET_ROOMS,
+  GET_SPECIFIC_ROOM,
   ROOMS_ERROR,
   CLEAR_ROOMS
 } from '../actions/types'
 
 const initialState = {
   rooms: [],
+  specificRoom: {},
   loading: true,
   error: {}
 }
@@ -20,10 +22,16 @@ export default function (state = initialState, action) {
         rooms: payload,
         loading: false
       }
+    case GET_SPECIFIC_ROOM:
+      return {
+        ...state,
+        specificRoom: payload,
+        loading: false
+      }
     case CLEAR_ROOMS:
       return {
         ...state,
-        profile: null,
+        rooms: null,
       }
     case ROOMS_ERROR:
       return {

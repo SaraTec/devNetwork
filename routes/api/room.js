@@ -39,6 +39,29 @@ router.get('/', auth, async (req, res) => {
   }
 })
 
+// @route   GET api/room/:id
+// @desc    Get room by id
+// @access  Private
+router.get('/:id', auth, async (req, res) => {
+  try {
+    let room = await Room.findById(req.params.id);
+    if (!room) {
+      return res.status(400).send('Room not found');
+    }
+
+    res.json({
+      ...room,
+      youAreAdmin: req.user.id == room.adminUser
+    })
+  } catch (error) {
+    if (error.kind == 'ObjectId') {
+      return res.status(400).send('Room not found');
+    }
+
+    console.error(error.message);
+    res.status(500).send('Server Error')
+  }
+})
 
 // @route   DELETE api/room/:id
 // @desc    Delete a room by id

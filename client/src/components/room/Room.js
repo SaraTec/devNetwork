@@ -2,14 +2,22 @@ import React, { Fragment, useEffect, useRef, useState } from 'react'
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { getSpecificRoom } from '../../actions/room'
+import { setAlert } from '../../actions/alert'
 
 const VideoWrapper = React.forwardRef((props, ref) => {
+
   return (
     <div className='video-wrapper'>
-      <video {...props} ref={ref}/>
+      <video {...props} ref={ref} /> {
+        props.isAdmin &&
+        <button className='btn btn-danger remove-user' onClick={props.removeUser}>X</button>
+      }
     </div>
   )
 })
+
 const UserVideo = (props) => {
   const ref = useRef();
 
@@ -21,24 +29,20 @@ const UserVideo = (props) => {
   }, []);
 
   return (
-    <VideoWrapper playsInline autoPlay ref={ref} />
+    <VideoWrapper playsInline autoPlay ref={ref} isAdmin={props.isAdmin} removeUser={props.removeUser}/>
   );
 }
 
-console.log("window.innerHeight = ", window.innerHeight / 2)
-const videoConstraints = {
-  height: window.innerHeight / 2,
-  width: window.innerWidth / 2
-};
-
-const Room = (props) => {
+const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpecificRoom }) => {
   const [peers, setPeers] = useState([]);
+  const [isAdmin, setAdmin] = useState(false);
   const socketRef = useRef({});
   const userVideo = useRef();
   const peersRef = useRef([]);
-  const roomID = props.match.params.id;
+  const roomID = match.params.id;
 
   useEffect(() => {
+    getSpecificRoom(roomID)
     socketRef.current = io.connect("/");
     let videoStream;
     navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true }).then(stream => {
@@ -69,6 +73,7 @@ const Room = (props) => {
       //%1
       socketRef.current.on("user joined", payload => {
         console.log("user joined = ", payload.callerID)
+        setAlert('You was kicked by admin', 'danger', 3000)
         const peer = addPeer(payload.signal, payload.callerID, stream)
         peersRef.current.push({
           peerID: payload.callerID,
@@ -107,21 +112,31 @@ const Room = (props) => {
       });
     })
 
+    socketRef.current.on("leave room", payload => {
+      setAlert('You was kicked by admin', 'danger', 3000)
+      onExit();
+    })
     return () => {
       socketRef.current.disconnect();
       stopVideo(videoStream)
     };
   }, []);
 
+  useEffect(() => {
+    console.log("specificRoom = ", specificRoom)
+    if (specificRoom && specificRoom.youAreAdmin) {
+      setAdmin(true)
+    }
+  }, [specificRoom])
+
   function stopVideo(stream) {
-    stream.getTracks().forEach(function(track) {
+    stream.getTracks().forEach(function (track) {
       track.stop();
     });
   }
 
   function onExit() {
-    console.log("onExit")
-    props.history.push('/rooms');
+    history.push('/rooms');
   }
 
   //#2
@@ -213,13 +228,18 @@ const Room = (props) => {
     return peer;
   }
 
+  const removeUser = (peerID) => {
+    console.log("removeUser")
+    socketRef.current.emit("kick user", { peerID });
+  }
+
   return (
     <div className='conference-container'>
       <div className='videos-wrapper'>
         <VideoWrapper muted ref={userVideo} autoPlay playsInline />
-        {peers.map(({ peer }, index) => {
+        {peers.map(({ peer, peerID }, index) => {
           return (
-            <UserVideo key={index} peer={peer} />
+            <UserVideo key={index} peer={peer} removeUser={() => removeUser(peerID)} isAdmin={isAdmin} />
           );
         })}
       </div>
@@ -235,4 +255,9 @@ const Room = (props) => {
 Room.propTypes = {
 }
 
-export default withRouter(Room)
+const mapStateToProps = state => ({
+  auth: state.auth,
+  room: state.room
+})
+
+export default connect(mapStateToProps, { getSpecificRoom, setAlert })(withRouter(Room))

@@ -3,15 +3,25 @@ import { setAlert } from './alert'
 
 import {
   GET_ROOMS,
+  GET_SPECIFIC_ROOM,
   ROOMS_ERROR,
   CLEAR_ROOMS
 } from './types'
 
+//Get specific rooms
+export const getSpecificRoom = (roomId) => async dispatch => {
+  const res = await axios.get(`/api/room/${roomId}`);
+
+  console.log("res = ", res)
+
+  dispatch({
+    type: GET_SPECIFIC_ROOM,
+    payload: res.data
+  })
+}
+
 //Get all rooms
 export const getRooms = () => async dispatch => {
-  dispatch({
-    type: CLEAR_ROOMS
-  })
   try {
     const res = await axios.get('/api/room');
 

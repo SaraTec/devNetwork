@@ -79,6 +79,14 @@ img {
   }
 }
 
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
 //Profiles Page
 .profile {
   display: grid;

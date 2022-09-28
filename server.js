@@ -52,9 +52,14 @@ io.on('connection', socket => {
     io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
   });
 
-  //%5
-  socket.on("returning signal", payload => {
-    io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
+    //%5
+    socket.on("returning signal", payload => {
+      io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
+    });
+
+   //%5
+  socket.on("kick user", payload => {
+    io.to(payload.peerID).emit('leave room', {});
   });
 
   socket.on('disconnect', async () => {

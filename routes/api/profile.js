@@ -196,7 +196,6 @@ router.put('/experience', [auth, [
   }
 
   try {
-    console.log("to", to)
     const profile = await Profile.findOne({ user: req.user.id });
     profile.experience.unshift(newExp);
 
