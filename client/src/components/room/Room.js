@@ -73,7 +73,6 @@ const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpeci
       //%1
       socketRef.current.on("user joined", payload => {
         console.log("user joined = ", payload.callerID)
-        setAlert('You was kicked by admin', 'danger', 3000)
         const peer = addPeer(payload.signal, payload.callerID, stream)
         peersRef.current.push({
           peerID: payload.callerID,
