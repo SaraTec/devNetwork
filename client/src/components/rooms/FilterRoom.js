@@ -28,7 +28,7 @@ const FilterRoom = ({ filterRooms}) => {
   }
   return (
       <form className="form" onSubmit={e => onSubmit(e)}>
-        <div className="form-group">
+        <div className="form-group language">
           <Select
             isClearable={true}
             isSearchable={true}
@@ -43,10 +43,10 @@ const FilterRoom = ({ filterRooms}) => {
             }}
           />
           <small className="form-text">
-            Give us an idea of where you are at in your career
+            Enter the language that will be spoken in the room
           </small>
         </div>
-        <div className="form-group">
+        <div className="form-group language_levels">
           <Select
             isClearable={true}
             isSearchable={true}
@@ -65,7 +65,7 @@ const FilterRoom = ({ filterRooms}) => {
             Select your language level
           </small>
         </div>
-        <div className="form-group">
+        <div className="form-group topics">
           <Select
             isClearable={true}
             isSearchable={true}

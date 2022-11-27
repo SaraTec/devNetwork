@@ -73,7 +73,7 @@ const EditRoom = ({ createRoom, getSpecificRoom, history, room: {
         <div className="form-group">
           <textarea placeholder="Description" name="desc" value={desc} onChange={e => onChange(e)}></textarea>
           <small className="form-text">
-            Describe the topic of this conversetions in more words
+            Let's get some information about the topic of your room
           </small>
         </div>
         <div className="form-group">
@@ -92,7 +92,7 @@ const EditRoom = ({ createRoom, getSpecificRoom, history, room: {
             }}
           />
           <small className="form-text">
-            Give us an idea of where you are at in your career
+            Enter the language that will be spoken in the room
           </small>
         </div>
         <div className="form-group">

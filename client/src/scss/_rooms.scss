@@ -17,11 +17,21 @@
 
       .form-group {
         margin-bottom: 10px;
+        width: 100%!important;
       }
     }
 
     .form-group, input[type='submit'] {
       margin-top: 0px;
+    }
+
+    .form-group {
+      &.language {
+        width: 20%;
+      }
+      &.topics, &.language_levels {
+        width: 40%;
+      }
     }
   }
 
