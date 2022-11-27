@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { withRouter } from 'react-router-dom'
@@ -36,6 +36,7 @@ const UserVideo = (props) => {
 const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpecificRoom }) => {
   const [peers, setPeers] = useState([]);
   const [isAdmin, setAdmin] = useState(false);
+  const [isMutted, setIsMutted] = useState(false);
   const socketRef = useRef({});
   const userVideo = useRef();
   const peersRef = useRef([]);
@@ -120,6 +121,10 @@ const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpeci
       stopVideo(videoStream)
     };
   }, []);
+
+  useEffect(() => {
+    //ToDo: міняти статус мікрофона
+  }, [isMutted]);
 
   useEffect(() => {
     if (specificRoom && auth && auth.user && specificRoom.adminUser ===  auth.user._id) {
@@ -242,6 +247,22 @@ const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpeci
         })}
       </div>
       <div className='actions-wrapper'>
+        {
+          isMutted ?
+            <button className='btn btn-danger micro' onClick={()=> {
+              setIsMutted(!isMutted)
+            }}>
+              {}
+              <i class="fas fa-microphone-slash "></i>
+            </button> 
+          : <button className='btn micro' onClick={()=> {
+              setIsMutted(!isMutted)
+            }}>
+              {}
+              <i class="fas fa-microphone"></i>
+            </button>
+        }
+
         <button className='btn btn-danger' onClick={onExit}>
           Leave
         </button>
