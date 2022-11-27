@@ -122,11 +122,10 @@ const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpeci
   }, []);
 
   useEffect(() => {
-    console.log("specificRoom = ", specificRoom)
-    if (specificRoom && specificRoom.youAreAdmin) {
+    if (specificRoom && auth && auth.user && specificRoom.adminUser ===  auth.user._id) {
       setAdmin(true)
     }
-  }, [specificRoom])
+  }, [specificRoom, auth])
 
   function stopVideo(stream) {
     stream.getTracks().forEach(function (track) {

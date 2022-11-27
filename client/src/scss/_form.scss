@@ -15,11 +15,15 @@
   input[type='date'],
   select,
   textarea {
+    font-family: "Raleway", sans-serif;
     display: block;
     width: 100%;
     padding: 0.4rem;
-    font-size: 1.2rem;
-    border: 1px solid #ccc;
+    font-size: 1rem;
+    border: 1px solid;
+    border-radius: 4px;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
   }
 
   input[type='submit'] {

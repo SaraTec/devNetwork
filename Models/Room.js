@@ -5,15 +5,39 @@ const RoomSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  name: {
+  title: {
     type: String,
   },
-  topics: {
-    type: [String],
+  desc: {
+    type: String,
   },
-  language_levels: {
-    type: [String]
+  topics: [{
+    value: {
+      type: String
+    },
+    label: {
+      type: String
+    }
+  }],
+  language: {
+    value: {
+      type: String
+    },
+    label: {
+      type: String
+    },
+    icon: {
+      type: String
+    }
   },
+  language_levels: [{
+    value: {
+      type: String
+    },
+    label: {
+      type: String
+    }
+  }],
   users: {
     type: [String],
   },

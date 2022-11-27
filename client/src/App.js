@@ -23,6 +23,7 @@ import { loadUser } from './actions/auth'
 import './scss/style.scss';
 import Rooms from './components/rooms/Rooms';
 import Room from './components/room/Room';
+import EditRoom from './components/rooms/EditRoom';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -51,6 +52,8 @@ const App = () => {
                   <Route exact path="/profiles" component={Profiles} />
                   <Route exact path="/profile/:id" component={Profile} />
                   <PrivateRoute exact path="/rooms" component={Rooms} />
+                  <Route exact path="/edit-room/:id" component={EditRoom} />
+                  <PrivateRoute exact path="/add-room" component={EditRoom} />
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                   <PrivateRoute exact path="/create-profile" component={CreateProfile} />
                   <PrivateRoute exact path="/edit-profile" component={EditProfile} />

@@ -2,6 +2,8 @@
 @import 'utilities';
 @import 'form';
 @import 'room';
+@import 'rooms';
+@import 'edit_room';
 
 * {
   box-sizing: border-box;
@@ -77,14 +79,6 @@ img {
     justify-content: center;
     text-align: center;
   }
-}
-
-.room-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  align-items: center;
 }
 
 //Profiles Page

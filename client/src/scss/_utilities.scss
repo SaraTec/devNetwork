@@ -40,6 +40,9 @@
   font-size: 1rem;
   margin-right: 0.5rem;
   outline: none;
+  &.btn-hidden {
+    visibility: hidden;
+  }
 
   &.btn-primary {
     @include set-background($primary-color);

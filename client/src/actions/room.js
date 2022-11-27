@@ -39,6 +39,72 @@ export const getRooms = () => async dispatch => {
   }
 }
 
+
+export const filterRooms = (formData) => async dispatch => {
+  dispatch({
+    type: CLEAR_ROOMS
+  })
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const res = await axios.post('api/room/filter', formData, config);
+
+    dispatch({
+      type: GET_ROOMS,
+      payload: res.data
+    })
+  } catch (error) {
+    console.log("ERROR")
+    dispatch({
+      type: ROOMS_ERROR,
+      payload: { msg: error.response.statusText, status: error.response.status }
+    });
+  }
+}
+
+// Create or update room
+export const createRoom = (formData, history, edit = false) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const {
+      title,
+      desc,
+      language,
+      topics,
+      language_levels
+    } = formData;
+
+    if(title && desc && language && (topics && topics.length) && (language_levels && language_levels.length)) {
+      const res = await axios.post('/api/room', formData, config);
+      dispatch({
+        type: GET_ROOMS,
+        payload: res.data
+      })
+
+      dispatch(setAlert(edit ? 'Room Updated' : 'Room Created', 'success'))
+  
+      history.push('/rooms');
+    } else {
+      dispatch(setAlert('All fields are required', 'danger'))
+    }
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+    }
+  }
+}
+
 //Delete room
 export const deleteRoom = id => async dispatch => {
   try {
@@ -51,28 +117,6 @@ export const deleteRoom = id => async dispatch => {
     dispatch({
       type: ROOMS_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-}
-
-
-export const filterRooms = (payload) => async dispatch => {
-  dispatch({
-    type: CLEAR_ROOMS
-  })
-  try {
-    //маємо передавати в пейлоуді дані для фільтрування
-    const res = await axios.get('/api/room');
-
-    //console.log("Відфільтровані кімнати = ", res.data)
-    dispatch({
-      type: GET_ROOMS,
-      payload: res.data
-    })
-  } catch (error) {
-    dispatch({
-      type: ROOMS_ERROR,
-      payload: { msg: error.response.statusText, status: error.response.status }
     });
   }
 }

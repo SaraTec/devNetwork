@@ -9,12 +9,10 @@ export const Navbar = ({ isAuthenticated, loading, logout }) => {
     <ul>
       <li>
         <Link to="/rooms">
-          Rooms
-        </Link>
-      </li>
-      <li>
-        <Link to="/profiles">
-          Developers
+          <i className="fas fa-comments"></i>{' '}
+          <span className='hide-sm'>
+            Rooms
+          </span>
         </Link>
       </li>
       <li>
@@ -43,7 +41,7 @@ export const Navbar = ({ isAuthenticated, loading, logout }) => {
   return (
     <nav className="navbar bg-dark">
       <h1>
-        <Link to="/"> <i className="fas fa-code"></i>DevConnector </Link>
+        <Link to="/"> <i className="fas fa-thin fa-campground"></i> Speaking club online</Link>
       </h1>
       {
         !loading && (
