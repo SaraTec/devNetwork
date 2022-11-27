@@ -82,8 +82,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 })
 
-RoomItem.propTypes = {
-
-}
-
 export default connect(mapStateToProps, { deleteRoom })(RoomItem)
