@@ -85,7 +85,9 @@ const FilterRoom = ({ filterRooms}) => {
             Games of Throns, Tenis )
           </small>
         </div>
-        <input type="submit" className="btn btn-primary my-1" value="Apply filters"/>
+        <div>
+          <input type="submit" className="btn btn-primary my-1" value="Apply filters"/>
+        </div>
       </form>
   )
 }

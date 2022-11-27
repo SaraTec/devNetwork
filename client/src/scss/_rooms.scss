@@ -7,6 +7,24 @@
     line-height: normal;
   }
 
+  form {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 10px;
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+
+      .form-group {
+        margin-bottom: 10px;
+      }
+    }
+
+    .form-group, input[type='submit'] {
+      margin-top: 0px;
+    }
+  }
+
   .room-item {
     position: relative;
     display: flex;
