@@ -70,16 +70,13 @@ router.post ('/filter', auth, async (req, res) => {
       language_levels
     } = req.body;
 
-    //console.log("req.body = ", req.body)
     let rooms = await Room.find();
     const filteredRooms = rooms.filter(room => {
-      //console.log("room = ", room)
       return (language ? room.language.value === language.value : true) &&
       ((topics && topics.length) ? topics.some(({value : topicValue}) => room.topics.some(({value}) => value === topicValue)) : true) &&
       ((language_levels && language_levels.length) ? language_levels.some(({value : levelValue}) => room.language_levels.some(({value}) => value === levelValue)) : true)
     });
 
-    //console.log("filteredRooms = ", filteredRooms)
     res.json(filteredRooms)
   } catch (error) {
     console.error(error.message);

@@ -36,11 +36,35 @@ export const TOPICS = [
     label: 'Games of Throns',
   },
   {
+    value: "serials",
+    label: 'Serials',
+  },
+  {
+    value: "movies",
+    label: 'Movies',
+  },
+  {
+    value: "comedy",
+    label: 'Comedy',
+  },
+  {
+    value: "politics",
+    label: 'Politics',
+  },
+  {
     value: "football",
     label: 'Football',
   },
   {
     value: "music",
     label: 'Music',
+  },
+  {
+    value: "сooking",
+    label: 'Cooking',
+  },
+  {
+    value: "show_business",
+    label: 'Show Business',
   },
 ]

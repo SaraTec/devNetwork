@@ -266,6 +266,12 @@ const Room = ({ history, setAlert, match, room: { specificRoom }, auth, getSpeci
         <button className='btn btn-danger' onClick={onExit}>
           Leave
         </button>
+        <button className='btn micro' onClick={()=> {
+              console.log("change video")
+            }}>
+              {}
+              <i class="fas fa-video"></i>
+        </button> 
       </div>
     </div>
   );
