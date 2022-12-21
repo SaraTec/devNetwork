@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import RoomItem from './RoomItem'
 import FilterRoom from './FilterRoom'
 
-const Rooms = ({ getRooms, room: { rooms, loading } }) => {
+const Rooms = ({ getRooms, room: { rooms, loading }, auth }) => {
   const [isFilter, setFilteres] = useState(false)
 
   useEffect(() => {
@@ -34,11 +34,14 @@ const Rooms = ({ getRooms, room: { rooms, loading } }) => {
       {isFilter && <FilterRoom />}
       {loading ? <Spinner /> :
         <div className="rooms">
-          {rooms && rooms.length > 0 ? (
-            rooms.map(room => (
+          {rooms && rooms.length > 0 && auth && auth.user ? [
+            ...rooms.filter(({adminUser}) => adminUser == auth.user._id).map(room => (
               <RoomItem key={room._id} room={room} />
-            ))
-          ) : <h4>No Rooms found...</h4>}
+            )),
+            ...rooms.filter(({adminUser}) => adminUser !== auth.user._id).map(room => (
+              <RoomItem key={room._id} room={room} />
+            )),
+          ] : <h4>No Rooms found...</h4>}
         </div>
       }
   </div>)
@@ -50,7 +53,8 @@ Rooms.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  room: state.room
+  room: state.room,
+  auth: state.auth
 })
 
 export default connect(mapStateToProps, { getRooms })(Rooms)
