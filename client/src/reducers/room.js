@@ -2,15 +2,15 @@ import {
   GET_ROOMS,
   GET_SPECIFIC_ROOM,
   ROOMS_ERROR,
-  CLEAR_ROOMS
-} from '../actions/types'
+  CLEAR_ROOMS,
+} from '../actions/types';
 
 const initialState = {
   rooms: [],
   specificRoom: {},
   loading: true,
-  error: {}
-}
+  error: {},
+};
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
@@ -20,25 +20,25 @@ export default function (state = initialState, action) {
       return {
         ...state,
         rooms: payload,
-        loading: false
-      }
+        loading: false,
+      };
     case GET_SPECIFIC_ROOM:
       return {
         ...state,
         specificRoom: payload,
-        loading: false
-      }
+        loading: false,
+      };
     case CLEAR_ROOMS:
       return {
         ...state,
         rooms: null,
-      }
+      };
     case ROOMS_ERROR:
       return {
         ...state,
         error: payload,
-        loading: false
-      }
+        loading: false,
+      };
     default:
       return state;
   }
