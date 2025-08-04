@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const RoomSchema = new mongoose.Schema({
   adminUser: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user'
+    ref: 'user',
   },
   title: {
     type: String,
@@ -11,36 +11,40 @@ const RoomSchema = new mongoose.Schema({
   desc: {
     type: String,
   },
-  topics: [{
-    value: {
-      type: String
+  topics: [
+    {
+      value: {
+        type: String,
+      },
+      label: {
+        type: String,
+      },
     },
-    label: {
-      type: String
-    }
-  }],
+  ],
   language: {
     value: {
-      type: String
+      type: String,
     },
     label: {
-      type: String
+      type: String,
     },
     icon: {
-      type: String
-    }
-  },
-  language_levels: [{
-    value: {
-      type: String
+      type: String,
     },
-    label: {
-      type: String
-    }
-  }],
+  },
+  language_levels: [
+    {
+      value: {
+        type: String,
+      },
+      label: {
+        type: String,
+      },
+    },
+  ],
   users: {
     type: [String],
   },
 });
 
-module.exports = Room = mongoose.model('room', RoomSchema)
+module.exports = Room = mongoose.model('room', RoomSchema);

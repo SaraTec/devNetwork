@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { validationResult } = require('express-validator')
-const auth = require('../../middleware/auth')
-const Room = require('../../Models/Room')
+const { validationResult } = require('express-validator');
+const auth = require('../../middleware/auth');
+const Room = require('../../Models/Room');
 
 // @route   POST api/room
 // @desc    Create a room
@@ -10,18 +10,10 @@ const Room = require('../../Models/Room')
 router.post('/', [auth], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
+    return res.status(400).json({ errors: errors.array() });
   }
 
-
-  const {
-    roomId,
-    title,
-    desc,
-    language,
-    topics,
-    language_levels
-  } = req.body;
+  const { roomId, title, desc, language, topics, language_levels } = req.body;
 
   const roomFields = {};
 
@@ -35,7 +27,7 @@ router.post('/', [auth], async (req, res) => {
   if (language_levels) roomFields.language_levels = language_levels;
 
   try {
-    let room = await Room.findById(roomId)
+    let room = await Room.findById(roomId);
 
     if (room) {
       //Update
@@ -45,44 +37,50 @@ router.post('/', [auth], async (req, res) => {
         { new: true }
       );
 
-      return res.json(room)
+      return res.json(room);
     }
 
     //Create
-    const newRoom = new Room(roomFields)
+    const newRoom = new Room(roomFields);
 
     await newRoom.save();
     res.json(newRoom);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error')
+    res.status(500).send('Server Error');
   }
 });
 
 // @route   POST api/room/filter/
 // @desc    Get filtered rooms
 // @access  Private
-router.post ('/filter', auth, async (req, res) => {
+router.post('/filter', auth, async (req, res) => {
   try {
-    const {
-      language,
-      topics,
-      language_levels
-    } = req.body;
+    const { language, topics, language_levels } = req.body;
 
     let rooms = await Room.find();
-    const filteredRooms = rooms.filter(room => {
-      return (language ? room.language.value === language.value : true) &&
-      ((topics && topics.length) ? topics.some(({value : topicValue}) => room.topics.some(({value}) => value === topicValue)) : true) &&
-      ((language_levels && language_levels.length) ? language_levels.some(({value : levelValue}) => room.language_levels.some(({value}) => value === levelValue)) : true)
+    const filteredRooms = rooms.filter((room) => {
+      return (
+        (language ? room.language.value === language.value : true) &&
+        (topics && topics.length
+          ? topics.some(({ value: topicValue }) =>
+              room.topics.some(({ value }) => value === topicValue)
+            )
+          : true) &&
+        (language_levels && language_levels.length
+          ? language_levels.some(({ value: levelValue }) =>
+              room.language_levels.some(({ value }) => value === levelValue)
+            )
+          : true)
+      );
     });
 
-    res.json(filteredRooms)
+    res.json(filteredRooms);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error')
+    res.status(500).send('Server Error');
   }
-})
+});
 
 // @route   GET api/room
 // @desc    Get all rooms
@@ -90,12 +88,12 @@ router.post ('/filter', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
   try {
     let rooms = await Room.find();
-    res.json(rooms)
+    res.json(rooms);
   } catch (error) {
     console.error(error.message);
-    res.status(500).send('Server Error')
+    res.status(500).send('Server Error');
   }
-})
+});
 
 // @route   GET api/room/:id
 // @desc    Get room by id
@@ -107,16 +105,16 @@ router.get('/:id', auth, async (req, res) => {
       return res.status(400).send('Room not found');
     }
 
-    res.json(room)
+    res.json(room);
   } catch (error) {
     if (error.kind == 'ObjectId') {
       return res.status(400).send('Room not found');
     }
 
     console.error(error.message);
-    res.status(500).send('Server Error')
+    res.status(500).send('Server Error');
   }
-})
+});
 
 // @route   DELETE api/room/:id
 // @desc    Delete a room by id
@@ -131,20 +129,20 @@ router.delete('/:id', auth, async (req, res) => {
 
     //Check user
     if (room.adminUser.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'user not autorizedƒ' })
+      return res.status(401).json({ msg: 'user not autorizedƒ' });
     }
 
     await room.remove();
 
-    res.json({ msg: 'Room removed' })
+    res.json({ msg: 'Room removed' });
   } catch (error) {
     if (error.kind == 'ObjectId') {
       return res.status(400).send('Room not found');
     }
 
     console.error(error.message);
-    res.status(500).send('Server Error')
+    res.status(500).send('Server Error');
   }
-})
+});
 
 module.exports = router;
