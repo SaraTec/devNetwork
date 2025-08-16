@@ -1,6 +1,8 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const app = express();
 const http = require('http');
@@ -15,6 +17,29 @@ app.use(express.json({ extended: false }));
 const PORT = process.env.PORT || 5500;
 
 //app.get('/', (req, res) => res.send('API Running'))
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'My API',
+      version: '1.0.0',
+      description: 'Документація для мого API',
+    },
+    servers: [
+      {
+        url: 'http://localhost:' + PORT,
+      },
+    ],
+  },
+  apis: ['./routes/api/*.js'], // шукатиме JSDoc-коментарі в усіх роутах
+};
+
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// 🔹 Swagger UI route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Define Routes
 app.use('/api/users', require('./routes/api/user'));
