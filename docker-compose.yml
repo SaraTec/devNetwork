@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  server:
+    build: .
+    container_name: devconnector-server
+    ports:
+      - "5500:5500" # порт для сервера ноджс
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      - .:/app # додаю шоб сервер мав доступ до config файлів
