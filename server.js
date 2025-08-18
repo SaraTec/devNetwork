@@ -4,6 +4,7 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
+const helmet= require('helmet');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
@@ -108,6 +109,24 @@ io.on('connection', (socket) => {
     }
   });
 });
+
+
+// Secure headers
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"], // мозволяє завантажувати скрипти стилі і зображення тільки з мого домену
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+        frameAncestors: ["'none'"], // захист від iframe embedding
+      },
+    },
+    frameguard: { action: 'deny' },  // X-Frame-Options: DENY
+    hsts: { maxAge: 31536000, includeSubDomains: true }, // змушує браузер завжди використовувати HTTPS
+  })
+);
 
 //Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
